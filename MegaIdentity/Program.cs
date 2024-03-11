@@ -15,6 +15,7 @@ builder.Services
     .AddSignInManager<SignInManager<IdentityUser>>();  
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAddressService, AddressService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews(); 

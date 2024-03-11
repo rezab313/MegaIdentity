@@ -10,67 +10,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MegaIdentity.Services;
 
-public interface IUserService
+public interface IAddressService
 {
-    Task<SignInResult> Login(LoginViewModel model);
-    bool IsSignedIn(ClaimsPrincipal user);
-    Task<IdentityResult> Register(RegisterViewModel model);
-    Task<IdentityResult> ChangePassword(ClaimsPrincipal user, ChangePasswordViewModel model);
     Task<AddressDto> Address(ClaimsPrincipal user);
+
     Task<bool> UpdateAddress(ClaimsPrincipal user, AddressViewModel model);
 }
 
-public class UserService : IUserService
+public class AddressService : IAddressService
 {
     private readonly UserManager<IdentityUser> _userManager;
-    private readonly SignInManager<IdentityUser> _signInManager;
     private readonly AppDbContext _appDbContext;
-    public UserService(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, AppDbContext appDbContext)
+
+    public AddressService(UserManager<IdentityUser> userManager, AppDbContext appDbContext)
     {
         _userManager = userManager;
-        _signInManager = signInManager;
         _appDbContext = appDbContext;
     }
-    /// <summary>
-    /// Attempts to sign in the specified <paramref name="model.Email"/> and <paramref name="model.password"/> combination
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    public async Task<SignInResult> Login(LoginViewModel model)
-    {
-        var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, lockoutOnFailure: false);
-
-        return result;
-    }
-
-    public bool IsSignedIn(ClaimsPrincipal user)
-    {
-        var result = _signInManager.IsSignedIn(user);
-
-        return result;
-    }
-
-    public async Task<IdentityResult> Register(RegisterViewModel model)
-    {
-        var user = new IdentityUser
-        {
-            UserName = model.Email,
-            Email = model.Email,
-        };
-        var result = await _userManager.CreateAsync(user, model.Password);
-
-        return result;
-    }
-
-    public async Task<IdentityResult> ChangePassword(ClaimsPrincipal user, ChangePasswordViewModel model)
-    {
-        var user_ = await _userManager.GetUserAsync(user);
-        if (user == null)
-            return IdentityResult.Failed(new IdentityError { Description = "User not found." });
-        var result = await _userManager.ChangePasswordAsync(user_, model.CurrentPassword, model.NewPassword);
-        return result;
-    }
-
+    
     public async Task<AddressDto> Address(ClaimsPrincipal user)
     {
         var userId = _userManager.GetUserId(user);

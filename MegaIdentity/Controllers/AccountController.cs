@@ -79,28 +79,5 @@ namespace MegaIdentity.Controllers
             return View();
         }
 
-        [Authorize]
-        public async Task<IActionResult> Address()
-        { 
-            return View(await _userService.Address(User)?? new Dtos.AddressDto());
-        }
-
-        [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> Address(AddressViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var result = await _userService.UpdateAddress(User, model);
-
-                if (result)
-                    return RedirectToAction("Index", "Home");
-
-                ModelState.AddModelError("", result.ToString());
-            }
-            return View();
-        }
-
-
     }
 }

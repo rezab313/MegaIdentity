@@ -1,0 +1,47 @@
+﻿@model MegaIdentity.Dtos.AddressDto
+
+<h2>ChangePassword</h2>
+
+@using (Html.BeginForm("Detail", "Address", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.State)
+        @Html.TextBoxFor(m => m.State, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.State)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.City)
+        @Html.TextBoxFor(m => m.City, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.City)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Street)
+        @Html.TextBoxFor(m => m.Street, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Street)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.ZipCode)
+        @Html.TextBoxFor(m => m.ZipCode, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.ZipCode)
+    </div>
+
+    <button type="submit" class="btn btn-primary">Change Address</button>
+}
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <ul>
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
